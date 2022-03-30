@@ -20,16 +20,20 @@
 
  (choice
   (putrevealif (x1 y1) (s1Ab) (split
-                                (3 -> (withdraw "A")) (2 -> (withdraw "A")))
+                                (3 -> (withdraw "A"))
+                                (1 -> (withdraw "A"))
+                                (1 -> (withdraw "B")))
                               )
   (putrevealif (x1 y1) (s1Bb) (split
-                                (3 -> (withdraw "A")) (2 -> (withdraw "A")))
+                                (3 -> (withdraw "A"))
+                                (1 -> (withdraw "A"))
+                                (1 -> (withdraw "B")))
                               )
-  (after 1 (reveal (s1Ad) (split
+  (after 2 (reveal (s1Ad) (split
                             )
                           )
    )
-  (after 1 (reveal (s1Bd) (split
+  (after 2 (reveal (s1Bd) (split
                             (3 -> (withdraw "A")))
                           )
    )

@@ -9,6 +9,7 @@ import Trifunctor
 import qualified Data.Map as Map
 import Data.Bifunctor as DB
 import qualified Data.Vector as V
+import Data.List (genericReplicate)
 
 tCheat = 10                                -- extra time given to check if someone has cheated
 
@@ -60,7 +61,7 @@ compileC ( Withdrawx p : d) u uCol n m ps i s1 s2 dep vdep t flag =
         
         -- | if we have no other priority choice following (d == []), we take that choice without revealing any extra secret 
         -- | because if there is at least one honest user in the setting she could do the step without any extra auth
-        c  = [ Split ( u : replicate (uCol `div` n) n ) ( [Withdraw p] : [ [Withdraw i] | i <- ps] ) ]   -- bitcoin  
+        c  = [ Split ( u : genericReplicate n (uCol`div` n)  ) ( [Withdraw p] : [ [Withdraw i] | i <- ps] ) ]   -- bitcoin  
        
         -- | this is the first big choice of the compiled contract, where everything goes as expected, 2 remainning 
         -- | here we just have a choice bewteen actions (reveals). Any user can reveal her extra secret of that level to stipulate c1 (c2 in dogecoin)
@@ -274,8 +275,8 @@ create2ExtraChoices d1 ds u uCol n m ps i nexti s1 s2 dep vdep t flag =
         
         -- | here contract list has more than one element, compile recursively
         -- | this is the 3rd and last big choice of the compiled contract, where noone revealed so we move to the next priority choice to be executed
-        d3   = compileC ds u uCol n m ps (nexti+1) s1 s2 dep vdep (i*t + tCheat) flag
-        d3'  = map (After (i * t + tCheat)) d3
+        d3   = compileC ds u uCol n m ps (nexti+1) s1 s2 dep vdep (t + i+tCheat) flag
+        d3'  = map (After (t + i+tCheat)) d3
 
         -- | compiled contracts c1 if contract list= [] else c2
         c1 = d1 ++ d2
@@ -283,7 +284,7 @@ create2ExtraChoices d1 ds u uCol n m ps i nexti s1 s2 dep vdep t flag =
 
     in (c1,c2)    
 
-concati :: C -> V.Vector (Pname, Sname) -> Int -> Int -> Int -> Int -> D -> C
+concati :: C -> V.Vector (Pname, Sname) -> Int -> Int-> Int -> Int -> D -> C
 concati d s n m i j x@(Withdraw _)
     | j <= n    = Reveal [snd $ s V.! ((j - 1) * m  + i - 1  ) ] d : concati d s n m i (j + 1) x
     | otherwise = []
@@ -335,15 +336,15 @@ concatChoices d s n m i j
 
 -- | i is level counter, j is participant counter
 -- n is the number of participants, m is the number of prichoices
-cheatCase ::  [Pname] -> Int -> Int -> Int
+cheatCase ::  [Pname] -> Int -> V -> V
     -> V.Vector (Pname, Int) -> V.Vector (Pname, Sname)
     -> Level -> Int -> Int -> Time -> C
 cheatCase ps n u ucol dep s i m j t
     | j <= n   = k : cheatCase ps n u ucol dep s i m (j + 1) t
     |otherwise = []
 
-    where k = After (i * t) (Reveal [snd $ s V.! p]                              -- check times !!!!!
-                                [ Split  [ i + ucol `div` (n-1) | (_,i) <- ps'   ]        -- add deposit of Pi -> done
+    where k = After (i + t) (Reveal [snd $ s V.! p]                              -- check times !!!!!
+                                [ Split  [ i + ucol `div`(n-1) | (_,i) <- ps'   ]        -- add deposit of Pi -> done
                                         [ [Withdraw i] | (i,_) <- ps' ] ] )   -- see *** below
           p = i - 1 + m * (j - 1)
           ps' = vecCompr (j-1) dep
