@@ -42,19 +42,18 @@ g2 = [  Depx "A" (1, 1) ("x1", "x2"),
         Depx "B" (1, 1) ("y1", "y2"),
         Secretx "B" "b" "000b",
         DepCol "A" (2,2) ("x1col", "x2col"),
-        SecretPlusB "A" [ ("s1Ab", "001Ab"), ("s2Ab", "002Ab"), ("s3Ab", "003Ab"), ("s4Ab", "004Ab")] ,
-        SecretPlusD "A" [ ("s1Ad", "001Ad"), ("s2Ad", "002Ad"), ("s3Ad", "003Ad"), ("s4Ad", "004Ad")  ] ,
+        SecretPlusB "A" [ ("s1Ab", "001Ab"), ("s2Ab", "002Ab"), ("s3Ab", "003Ab")] ,
+        SecretPlusD "A" [ ("s1Ad", "001Ad"), ("s2Ad", "002Ad"), ("s3Ad", "003Ad") ] ,
         DepCol "B" (2,2) ("y1col","y2col"), 
-        SecretPlusB "B" [ ("s1Bb", "001Bb"), ("s2Bb", "002Bb"), ("s3Bb", "003Bb"), ("s4Bb", "004Bb")  ] ,
-        SecretPlusD "B" [ ("s1Bd", "001Bd"), ("s2Bd", "002Bd"), ("s3Bd", "003Bd"), ("s4Bd", "004Bd")  ] 
+        SecretPlusB "B" [ ("s1Bb", "001Bb"), ("s2Bb", "002Bb"), ("s3Bb", "003Bb")  ] ,
+        SecretPlusD "B" [ ("s1Bd", "001Bd"), ("s2Bd", "002Bd"), ("s3Bd", "003Bd")  ] 
     ]
 
 c2 :: Cx
-c2 = [ Revealx ["a"] [Revealx ["b"] [Splitx [(1,1), (1,1)] [[Withdrawx "A"], [Withdrawx "B"]] ] ]
-     , Revealx ["a" ][Withdrawx "A"]
+c2 = [ Revealx ["a"] [Revealx ["b"] [Splitx [(1,1), (1,1)] [[Withdrawx "A"], [Withdrawx "B"]] ], Withdrawx "A" ]
      , Revealx ["b"] [Withdrawx "B"]
-     , Splitx [(1,1), (1,1)] [[Withdrawx "A"], [Withdrawx "B"]]
-    ]
+     , Splitx [(1,1), (1,1)] [[Withdrawx "A"], [Withdrawx "B"]]]
+     
 -- end of example 2
 
 -- example 3 -> multiple secrets
@@ -115,3 +114,17 @@ g5 = [  Depx "A" (1, 1) ("x1", "x2"),
     ]
 c5 = [ Revealx ["b"] [Withdrawx "A", Withdrawx "B"]
      , Withdrawx "A"]
+
+p6 = p1
+
+g6 = [  Depx "A" (1, 1) ("x1", "x2"),
+        DepCol "A" (2,2) ("x1col", "x2col"),
+        Secretx "B" "b" "bbb",
+        SecretPlusB "A" [ ("s1Ab", "001Ab")  ] ,
+        SecretPlusD "A" [ ("s1Ad", "001Ad")  ] ,
+        Depx "B" (1, 1) ("y1", "y2"),
+        DepCol "B" (2,2) ("y1col","y2col"), 
+        SecretPlusB "B" [ ("s1Bb", "001Bb")] ,
+        SecretPlusD "B" [ ("s1Bd", "001Bd") ] 
+    ]
+c6 = [Withdrawx "A"]

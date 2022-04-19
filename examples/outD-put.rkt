@@ -29,12 +29,12 @@
                                 (1 -> (withdraw "A"))
                                 (1 -> (withdraw "B")))
                               )
-  (after 2 (reveal (s1Ab) (split
-                            )
-                          )
+  (after 10 (reveal (s1Ab) (split
+                             )
+                           )
    )
-  (after 2 (reveal (s1Bb) (split
-                            (3 -> (withdraw "A")))
-                          )
+  (after 10 (reveal (s1Bb) (split
+                             (3 -> (withdraw "A")))
+                           )
    )
   ))

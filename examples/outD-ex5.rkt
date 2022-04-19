@@ -33,15 +33,15 @@
                                      (1 -> (withdraw "A"))
                                      (1 -> (withdraw "B")))
                                    )
-                    (after 3 (reveal (s2Ab) (split
+                    (after 2 (reveal (s2Ab) (split
                                               )
                                             )
                      )
-                    (after 3 (reveal (s2Bb) (split
+                    (after 2 (reveal (s2Bb) (split
                                               (3 -> (withdraw "A")))
                                             )
                      )
-                    (after 13 (split
+                    (after 12 (split
                                 (1 -> (withdraw "B"))
                                 (1 -> (withdraw "A"))
                                 (1 -> (withdraw "B")))
@@ -58,29 +58,29 @@
                                      (1 -> (withdraw "A"))
                                      (1 -> (withdraw "B")))
                                    )
-                    (after 3 (reveal (s2Ab) (split
+                    (after 2 (reveal (s2Ab) (split
                                               )
                                             )
                      )
-                    (after 3 (reveal (s2Bb) (split
+                    (after 2 (reveal (s2Bb) (split
                                               (3 -> (withdraw "A")))
                                             )
                      )
-                    (after 13 (split
+                    (after 12 (split
                                 (1 -> (withdraw "B"))
                                 (1 -> (withdraw "A"))
                                 (1 -> (withdraw "B")))
                      )
                     ))
-  (after 2 (reveal (s1Ab) (split
+  (after 1 (reveal (s1Ab) (split
                             )
                           )
    )
-  (after 2 (reveal (s1Bb) (split
+  (after 1 (reveal (s1Bb) (split
                             (3 -> (withdraw "A")))
                           )
    )
-  (after 12 (split
+  (after 11 (split
               (1 -> (withdraw "A")) (1 -> (withdraw "A")) (1 -> (withdraw "B")))
    )
   ))

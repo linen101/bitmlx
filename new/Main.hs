@@ -38,8 +38,8 @@ main = do
 
         -- | check well formness and then IF well formed -> compile
         t  = check preconditions n m u1 u2 p             -- check if contract preconditions are well defined
-        cB = compileC contract u1  col1  n m p' level s1' s2' dep1' vol1 tInit True  -- compile contract IN BITCOIN
-        cD = compileC contract u2  col2  n m p' level s2' s1' dep2' vol2 tInit False -- compile contract IN DOGECOIN
+        cB = compileC contract u1  col1  n m p' level s1' s2' dep1' vol1 tInit True [] -- compile contract IN BITCOIN
+        cD = compileC contract u2  col2  n m p' level s2' s1' dep2' vol2 tInit False [] -- compile contract IN DOGECOIN
         gB = compileG preconditions True
         gD = compileG preconditions False
 
@@ -55,16 +55,16 @@ main = do
     where 
 
         -- | INPUTS & OUTPUTS : IF YOU WANT TO TEST EDIT HERE THANK YOU :)
-        participants = p4
-        preconditions = g4
-        contract = c4
-        outB = "examples/outB-put.rkt"
-        outD = "examples/outD-put.rkt"
+        participants = p6
+        preconditions = g6
+        contract = c6
+        outB = "examples/outB-6.rkt"
+        outD = "examples/outD-6.rkt"
 
 
 -- | initial values
 tCheat = 10                                 -- extra time given to check if someone has cheated
-tInit  = 1                                  -- initial time
+tInit  = 0                                  -- initial time
 level  = 1                                  -- initial level
 bal    = 0                                  -- initial balance
 v      = V.empty :: V.Vector (Pname, Sname) -- for secrets
