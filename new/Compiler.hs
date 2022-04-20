@@ -58,39 +58,37 @@ compileC :: Cx -> V -> V -> Int -> Int
 compileC ( Withdrawx p : d) u uCol n m ps i s1 s2 dep vdep t flag snot = 
     case d of []       ->  d2 : d1
           
-              (x : _)  ->  d1
+              (x : _)  ->  d3 : d1
     where   
-        
-        -- | if we have no other priority choice following (d == []), we take that choice without revealing any extra secret 
-        -- | because if there is at least one honest user in the setting she could do the step without any extra auth
+        -- | withdraw becomes a split: collaterals are splitted to every user and p gets also withdrawn.
         c  =  Split ( u : genericReplicate n (uCol`div` n)  ) ( [Withdraw p] : [ [Withdraw i] | i <- ps] )   -- we keep it 
        
+        -- | punishment for all secrets not revealed until now
         punish = if flag
                     then cheatCase ps n u uCol dep s2 snot m 1 t
                     else cheatCase ps n u uCol dep s1 snot m 1 t
+        
+        -- | normal execution of withdraw/split
         normal = After t c
+
+        -- | concatenate the (2) choices together
         choice1 = normal : punish
 
-        -- | this is the first big choice of the compiled contract, where everything goes as expected, 2 remainning 
-        -- | here we just have a choice bewteen actions (reveals). Any user can reveal her extra secret of that level to stipulate c1 (c2 in dogecoin)
-        -- | we concatenate all the possible reveal contracts
-        -- | the number of possible reveals equals to the number of par/ants, the result of "concatChoices" is a list of contracts w\ lentgh n
+        -- | repeat the above contract (choice1) for every participant revealing their secret and taking the step
         d1  = if flag 
                 then concatChoices choice1 s1 n m i 1                  -- bitcoin
                 else concatChoices choice1 s2 n m i 1                  -- dogecoin
-
+        
+        -- | lastpunish, lock and d2 are only for the case (withdraw A : [])
         lastpunish = if flag
                         then (cheatCase ps n u uCol dep s2 [i] m 1 t) ++ punish
                         else (cheatCase ps n u uCol dep s1 [i] m 1 t) ++ punish
         lock = After (t+2) (Reveal ["dummy"] [])
 
         d2 = After (t+1) (Reveal ["dummy"] (lock : lastpunish)) 
-        
-        -- | when we call create2extrachoices, we want to take care the "cheat" Case and the "after tCheat" case
-        -- the cheat case is fired if the secret from the current level on the other side is revealed
-        -- and the after tCheat is fired if no secret is revealed in any side. i indicates the current level (and the current secret)
-        -- (c1, c2) = create2ExtraChoices d1 d u uCol n m ps i i s1 s2 dep vdep t flag
 
+        d3 = After (t+3) (Reveal ["dummy"] (compileC d u uCol n m ps (i+1) s1 s2 dep vdep (t+4) flag (i:snot)) )
+        
 {-
 compileC (Splitx listU listC : d) u uCol n m ps i s1 s2 dep vdep t flag = 
     case d of []       ->  d'

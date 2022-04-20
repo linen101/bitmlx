@@ -120,11 +120,11 @@ p6 = p1
 g6 = [  Depx "A" (1, 1) ("x1", "x2"),
         DepCol "A" (2,2) ("x1col", "x2col"),
         Secretx "B" "b" "bbb",
-        SecretPlusB "A" [ ("s1Ab", "001Ab")  ] ,
-        SecretPlusD "A" [ ("s1Ad", "001Ad")  ] ,
+        SecretPlusB "A" [ ("s1Ab", "001Ab"), ("s2Ab", "002Ab")  ] ,
+        SecretPlusD "A" [ ("s1Ad", "001Ad"), ("s2Ad", "002Ad")  ] ,
         Depx "B" (1, 1) ("y1", "y2"),
         DepCol "B" (2,2) ("y1col","y2col"), 
-        SecretPlusB "B" [ ("s1Bb", "001Bb")] ,
-        SecretPlusD "B" [ ("s1Bd", "001Bd") ] 
+        SecretPlusB "B" [ ("s1Bb", "001Bb"), ("s2Bb", "002Bb") ] ,
+        SecretPlusD "B" [ ("s1Bd", "001Bd"), ("s2Bd", "002Bd") ] 
     ]
-c6 = [Withdrawx "A"]
+c6 = [Withdrawx "A", Withdrawx "B"]
